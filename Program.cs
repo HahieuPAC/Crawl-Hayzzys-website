@@ -23,7 +23,7 @@ var savePathExcel = currentPath.Split("bin")[0] +@"Data Crawl\";
 const string baseUrl = "https://www.hazzys.com";
 
 //List mã loại sản phẩm
-var typeCodes = new List<int>() { 3};
+var typeCodes = new List<int>() {1, 2, 3, 4, 5};
 
 // List product crawl
 // List lưu danh sách các sản phẩm Crawl được
@@ -40,7 +40,7 @@ foreach (var typeCode in typeCodes)
     var driver = new EdgeDriver(currentPath.Split("bin")[0]);
     driver.Navigate().GoToUrl(requestUrl);
     var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(1000));
-    wait.Until(d => d.FindElements(By.ClassName("discount")).Count > 0);
+    wait.Until(d => d.FindElements(By.ClassName("pro-wrap__items")).Count > 0);
 
     var stopTime = DateTime.Now.AddMinutes(5);
         while (DateTime.Now < stopTime)
@@ -54,20 +54,17 @@ foreach (var typeCode in typeCodes)
                     // tên sản phẩm
                     var nameProduct = element
                     .FindElement(By.CssSelector(".pro-wrap__obj .pro-name"))
-                    .Text;
+                    .Text
+                    .ReplaceMultiToEmpty(new List<string>() { "/", "|", "?", ":", "*", ">", "<"});
 
-                    // Phân loại
-                    var typeProduct = element
+                // Phân loại
+                var typeProduct = element
                     .FindElement(By.CssSelector(".pro-wrap__obj .pro-brand"))
                     .Text;
 
                     // Giá bán
                     var sellPrice = element
                     .FindElement(By.CssSelector(".pro-wrap__obj .pro-util .pro-util__sale"))
-                    .Text;
-
-                    var orginPrice = element
-                    .FindElement(By.ClassName("discount"))
                     .Text;
 
                     // Tải ảnh
@@ -90,7 +87,6 @@ foreach (var typeCode in typeCodes)
                         ProductName = nameProduct,
                         ProductType = typeProduct,
                         DiscountPrice = sellPrice,
-                        OrginPrice = orginPrice,
                         ProductNameImg = fileNameImage
                     });
                 }
