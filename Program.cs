@@ -23,7 +23,7 @@ var savePathExcel = currentPath.Split("bin")[0] +@"Data Crawl\";
 const string baseUrl = "https://www.hazzys.com";
 
 //List mã loại sản phẩm
-var typeCodes = new List<int>() {1, 2, 3, 4, 5};
+var typeCodes = new List<int>() {1};
 
 // List product crawl
 // List lưu danh sách các sản phẩm Crawl được
@@ -68,17 +68,42 @@ foreach (var typeCode in typeCodes)
                     .Text;
 
                     // Tải ảnh
-                    var imageProduct = element
+
+                    var linkLabelImageProduct = Path.GetFileName(element
                     .FindElement(By.CssSelector(".pro-wrap__img img"))
-                    .GetAttribute("src");
+                    .GetAttribute("src")).Split("_00.jpg")[0];
 
-                    var fileNameImage = nameProduct + ".jpg";
-                    var pathSaveImage = savePathExcel+ @"Images\" + fileNameImage;
-           
+                    var linkProduct =baseUrl + "/product.do?cmd=getProductDetail&PROD_CD=" +linkLabelImageProduct;
+                    var folderPath = Path.Combine(savePathExcel, "Images", nameProduct);
 
-                    WebClient webClient = new WebClient();
-                    webClient.DownloadFile(new Uri(imageProduct), pathSaveImage);
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
 
+                    driver.Navigate().GoToUrl(linkLabelImageProduct);
+                    wait.Until(g => g.FindElements(By.CssSelector(".pro-detail__photo .swiper-slide img")).Count > 0);
+                    while (DateTime.Now < stopTime)
+                    {
+                        var imgProdetail = driver.FindElements(By.ClassName(".pro-detail__photo .swiper-slide img"));
+                        if (imgProdetail.Count > 0)
+                        { 
+                            foreach (var ImgDetail in imgProdetail )
+                            {
+                                var linkImgDetail = ImgDetail.GetAttribute("src");
+                                var fileNameImage = name
+
+
+                                WebClient webClient = new WebClient();
+                                webClient.DownloadFile(new Uri)
+
+
+
+                            }
+                        }
+                    }
+
+                    
 
                     // Add Product to listDataExport
                     // Thêm sản phẩm vào listDataExport
@@ -87,7 +112,6 @@ foreach (var typeCode in typeCodes)
                         ProductName = nameProduct,
                         ProductType = typeProduct,
                         DiscountPrice = sellPrice,
-                        ProductNameImg = fileNameImage
                     });
                 }
                 break;
