@@ -52,10 +52,19 @@ foreach (var typeCode in typeCodes)
                 foreach (var element in elements)
                 {
                     // tên sản phẩm
-                    var nameProduct = element
-                    .FindElement(By.CssSelector(".pro-wrap__obj .pro-name"))
-                    .Text
-                    .ReplaceMultiToEmpty(new List<string>() { "/", "|", "?", ":", "*", ">", "<"});
+                    var nameProduct = "";
+                    try
+                    {
+                        var elementt = driver.FindElement(By.CssSelector(".pro-wrap__obj .pro-name"));
+                        nameProduct = elementt.Text.ReplaceMultiToEmpty(new List<string>() { "/", "|", "?", ":", "*", ">", "<" });
+                    }
+                    catch (StaleElementReferenceException)
+                    {
+                        // Tìm kiếm lại đối tượng nếu xảy ra StaleElementReferenceException
+                        var elementt = driver.FindElement(By.CssSelector(".pro-wrap__obj .pro-name"));
+                        nameProduct = elementt.Text.ReplaceMultiToEmpty(new List<string>() { "/", "|", "?", ":", "*", ">", "<" });
+                    }
+
 
                 // Phân loại
                 var typeProduct = element
@@ -81,26 +90,27 @@ foreach (var typeCode in typeCodes)
                         Directory.CreateDirectory(folderPath);
                     }
 
-                    driver.Navigate().GoToUrl(linkLabelImageProduct);
+                    driver.Navigate().GoToUrl(linkProduct);
                     wait.Until(g => g.FindElements(By.CssSelector(".pro-detail__photo .swiper-slide img")).Count > 0);
                     while (DateTime.Now < stopTime)
                     {
-                        var imgProdetail = driver.FindElements(By.ClassName(".pro-detail__photo .swiper-slide img"));
+                        var imgProdetail = driver.FindElements(By.CssSelector(".pro-detail__photo .swiper-slide img"));
                         if (imgProdetail.Count > 0)
                         { 
-                            foreach (var ImgDetail in imgProdetail )
+                            foreach (var imgDetail in imgProdetail )
                             {
-                                var linkImgDetail = ImgDetail.GetAttribute("src");
-                                var fileNameImage = name
-
+                                var linkImgDetail = imgDetail.GetAttribute("src"); 
+                                var fileNameImage = Path.GetFileName(linkImgDetail);
+                                var fileImgPath=Path.Combine(folderPath, fileNameImage);
 
                                 WebClient webClient = new WebClient();
-                                webClient.DownloadFile(new Uri)
-
-
-
+                                webClient.DownloadFile(new Uri(linkImgDetail), fileImgPath);
+                                driver.Close();
                             }
+                            break;
+
                         }
+                                                    driver.Navigate().GoToUrl(requestUrl); // Quay lại trang web requestUrl để tiếp tục lấy dữ liệu các sản phẩm khác
                     }
 
                     
@@ -116,9 +126,11 @@ foreach (var typeCode in typeCodes)
                 }
                 break;
             }
+            
+    
         }
-
-    driver.Close();
+        driver.Close();
+     
 }
 var fileName = DateTime.Now.Ticks + "_Hayzzys-crawl.xlsx";
 
