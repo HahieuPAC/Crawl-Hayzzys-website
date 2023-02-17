@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\HIeu\\Documents\\Project\\C#\\crawl-https-fridayshopping.vn\\CrawlDataWebsiteToolBasic.csproj": {}
+    "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj": {}
   },
   "projects": {
-    "C:\\Users\\HIeu\\Documents\\Project\\C#\\crawl-https-fridayshopping.vn\\CrawlDataWebsiteToolBasic.csproj": {
+    "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HIeu\\Documents\\Project\\C#\\crawl-https-fridayshopping.vn\\CrawlDataWebsiteToolBasic.csproj",
+        "projectUniqueName": "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
         "projectName": "CrawlDataWebsiteToolBasic",
-        "projectPath": "C:\\Users\\HIeu\\Documents\\Project\\C#\\crawl-https-fridayshopping.vn\\CrawlDataWebsiteToolBasic.csproj",
+        "projectPath": "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
         "packagesPath": "C:\\Users\\HIeu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HIeu\\Documents\\Project\\C#\\crawl-https-fridayshopping.vn\\obj\\",
+        "outputPath": "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

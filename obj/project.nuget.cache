@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "u3GpvUeW4C/EozV3n+0X8mKgX6/bNIJ2S3LYZJUYqZx4rUjp88w4D0QX9hDA84Z0i8/TSPUdMcLegWEhkB6teA==",
+  "dgSpecHash": "AEi9GUsWsnbe3658zRgBJjOLeQepFzJtx+vz4qMXsyZXyFPI6v0OEvTXQEPVvBUIWy5yY9MUlGQ1ma5fVRHQGQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\HIeu\\Documents\\Project\\C#\\crawl-https-fridayshopping.vn\\CrawlDataWebsiteToolBasic.csproj",
+  "projectFilePath": "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HIeu\\.nuget\\packages\\epplus\\6.0.8\\epplus.6.0.8.nupkg.sha512",
     "C:\\Users\\HIeu\\.nuget\\packages\\epplus.interfaces\\6.0.0\\epplus.interfaces.6.0.0.nupkg.sha512",
