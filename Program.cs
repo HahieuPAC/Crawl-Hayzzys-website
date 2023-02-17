@@ -28,10 +28,11 @@ var typeCodes = new List<int>() {1};
 // List product crawl
 // List lưu danh sách các sản phẩm Crawl được
 var listDataExport = new List<ProductModel>();
+var listLinkProduct = new List<string>();
 
 Console.WriteLine("Please do not turn off the app while crawling!");
 
-//Loop
+//Loop 1
 foreach (var typeCode in typeCodes)
 {
     var requestUrl = baseUrl + $"/display.do?cmd=getTCategoryMain&TCAT_CD=1000{typeCode}";
@@ -51,87 +52,68 @@ foreach (var typeCode in typeCodes)
             {
                 foreach (var element in elements)
                 {
-                    // tên sản phẩm
-                    var nameProduct = "";
-                    try
-                    {
-                        var elementt = driver.FindElement(By.CssSelector(".pro-wrap__obj .pro-name"));
-                        nameProduct = elementt.Text.ReplaceMultiToEmpty(new List<string>() { "/", "|", "?", ":", "*", ">", "<" });
-                    }
-                    catch (StaleElementReferenceException)
-                    {
-                        // Tìm kiếm lại đối tượng nếu xảy ra StaleElementReferenceException
-                        var elementt = driver.FindElement(By.CssSelector(".pro-wrap__obj .pro-name"));
-                        nameProduct = elementt.Text.ReplaceMultiToEmpty(new List<string>() { "/", "|", "?", ":", "*", ">", "<" });
-                    }
+                    
 
-
-                // Phân loại
-                var typeProduct = element
-                    .FindElement(By.CssSelector(".pro-wrap__obj .pro-brand"))
-                    .Text;
-
-                    // Giá bán
-                    var sellPrice = element
-                    .FindElement(By.CssSelector(".pro-wrap__obj .pro-util .pro-util__sale"))
-                    .Text;
-
-                    // Tải ảnh
-
+                    // Lấy link sản phẩm
                     var linkLabelImageProduct = Path.GetFileName(element
                     .FindElement(By.CssSelector(".pro-wrap__img img"))
                     .GetAttribute("src")).Split("_00.jpg")[0];
 
                     var linkProduct =baseUrl + "/product.do?cmd=getProductDetail&PROD_CD=" +linkLabelImageProduct;
-                    var folderPath = Path.Combine(savePathExcel, "Images", nameProduct);
 
-                    if (!Directory.Exists(folderPath))
-                    {
-                        Directory.CreateDirectory(folderPath);
-                    }
-
-                    driver.Navigate().GoToUrl(linkProduct);
-                    wait.Until(g => g.FindElements(By.CssSelector(".pro-detail__photo .swiper-slide img")).Count > 0);
-                    while (DateTime.Now < stopTime)
-                    {
-                        var imgProdetail = driver.FindElements(By.CssSelector(".pro-detail__photo .swiper-slide img"));
-                        if (imgProdetail.Count > 0)
-                        { 
-                            foreach (var imgDetail in imgProdetail )
-                            {
-                                var linkImgDetail = imgDetail.GetAttribute("src"); 
-                                var fileNameImage = Path.GetFileName(linkImgDetail);
-                                var fileImgPath=Path.Combine(folderPath, fileNameImage);
-
-                                WebClient webClient = new WebClient();
-                                webClient.DownloadFile(new Uri(linkImgDetail), fileImgPath);
-                                driver.Close();
-                            }
-                            break;
-
-                        }
-                                                    driver.Navigate().GoToUrl(requestUrl); // Quay lại trang web requestUrl để tiếp tục lấy dữ liệu các sản phẩm khác
-                    }
-
-                    
-
-                    // Add Product to listDataExport
-                    // Thêm sản phẩm vào listDataExport
-                    listDataExport.Add(new ProductModel()
-                    {
-                        ProductName = nameProduct,
-                        ProductType = typeProduct,
-                        DiscountPrice = sellPrice,
-                    });
+                    listLinkProduct.Add(linkProduct);
                 }
                 break;
             }
-            
-    
         }
         driver.Close();
-     
 }
+
+//Loop 2
+foreach (var link in listLinkProduct)
+{
+    var driver = new EdgeDriver(currentPath.Split("bin")[0]);
+    driver.Navigate().GoToUrl(link);
+    var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(1000));
+    wait.Until(d => d.FindElements(By.ClassName("pro-detail")).Count > 0);
+
+    var stopTime = DateTime.Now.AddMinutes(5);
+    while (DateTime.Now < stopTime)
+    {
+        var elements = driver.FindElements(By.CssSelector(".pro-detail"));
+        Console.WriteLine(elements.Count);
+        if (elements.Count > 0)
+        {
+            foreach (var element in elements)
+            {
+                // Hình ảnh
+                var nodesDetailImg = element.FindElements(By.CssSelector(".pro-detail__photo .swiper-slide img"));
+
+                var folderPath = Path.Combine(savePathExcel, "Images");
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                foreach ( var nodeDetailImg in nodesDetailImg)
+                {
+                    var linkDetailImg = nodeDetailImg.GetAttribute("src");
+                    var fileNameImg = Path.GetFileName(linkDetailImg);
+                    var filePathImg = Path.Combine(folderPath + fileNameImg);
+
+                    WebClient webClient = new WebClient();
+                    webClient.DownloadFile(new Uri(linkDetailImg), fileNameImg);
+                }
+            }
+            break;
+        }
+    }
+    driver.Close();
+}
+
+
+
 var fileName = DateTime.Now.Ticks + "_Hayzzys-crawl.xlsx";
 
 
