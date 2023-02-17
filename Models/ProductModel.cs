@@ -8,6 +8,5 @@ namespace CrawlDataWebsiteTool.Models
         [Description("Phân loại")] public string ProductType { get; set; }
         [Description("Giá bán")] public string DiscountPrice { get; set; }
         [Description("Tiền Tệ")] public string Currency { get; set; }
-        [Description("tên ảnh sản phẩm")] public string ProductNameImg { get; set; }
     }
 }

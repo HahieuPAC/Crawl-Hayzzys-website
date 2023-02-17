@@ -81,15 +81,21 @@ foreach (var link in listLinkProduct)
     while (DateTime.Now < stopTime)
     {
         var elements = driver.FindElements(By.CssSelector(".pro-detail"));
-        Console.WriteLine(elements.Count);
         if (elements.Count > 0)
         {
             foreach (var element in elements)
             {
+                // Tên sản phẩm
+                var nameProduct = element
+                .FindElement(By.ClassName("tit-depth02"))
+                .Text
+                .ReplaceMultiToEmpty(new List<string>() { "/", "|", "?", ":", "*", ">", "<"});
+
+
                 // Hình ảnh
                 var nodesDetailImg = element.FindElements(By.CssSelector(".pro-detail__photo .swiper-slide img"));
 
-                var folderPath = Path.Combine(savePathExcel, "Images");
+                var folderPath = Path.Combine(savePathExcel, "Images", nameProduct);
 
                 if (!Directory.Exists(folderPath))
                 {
@@ -100,11 +106,17 @@ foreach (var link in listLinkProduct)
                 {
                     var linkDetailImg = nodeDetailImg.GetAttribute("src");
                     var fileNameImg = Path.GetFileName(linkDetailImg);
-                    var filePathImg = Path.Combine(folderPath + fileNameImg);
+                    var filePathImg = Path.Combine(folderPath, fileNameImg);
 
                     WebClient webClient = new WebClient();
-                    webClient.DownloadFile(new Uri(linkDetailImg), fileNameImg);
+                    webClient.DownloadFile(new Uri(linkDetailImg), filePathImg);
                 }
+
+                 // Thêm sản phẩm vào listDataExport
+                 listDataExport.Add(new ProductModel()
+                 {
+                    ProductName = nameProduct
+                 });
             }
             break;
         }
