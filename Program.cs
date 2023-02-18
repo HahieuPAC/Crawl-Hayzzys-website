@@ -23,7 +23,7 @@ var savePathExcel = currentPath.Split("bin")[0] +@"Data Crawl\";
 const string baseUrl = "https://www.hazzys.com";
 
 //List mã loại sản phẩm
-var typeCodes = new List<int>() {1};
+var typeCodes = new List<int>() {1,2,3,4,5};
 
 // List product crawl
 // List lưu danh sách các sản phẩm Crawl được
@@ -55,9 +55,7 @@ foreach (var typeCode in typeCodes)
                 {
 
                     // Lấy link sản phẩm
-                    var linkLabelImageProduct = Path.GetFileName(element
-                    .FindElement(By.CssSelector(".pro-wrap__img img"))
-                    .GetAttribute("src")).Split("_00.jpg")[0];
+                    var linkLabelImageProduct = element.GetAttribute("id");
 
                     var linkProduct =baseUrl + "/product.do?cmd=getProductDetail&PROD_CD=" +linkLabelImageProduct;
 
@@ -101,15 +99,30 @@ foreach (var link in listLinkProduct)
                 .Text;
 
                 // Giá bán
-                var sellPrice =  element
-                .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__pay .discount"))
-                .Text;
+                var sellPrice = element
+                    .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__pay .discount"))
+                    .Text
+                    .ReplaceMultiToEmpty(new List<string>() { ",","원" });
 
                 //Chênh lệch
-                var retail = element
-                .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .retail"))
-                .Text;
+                String retail="";
+                try 
+                {
+                    retail = element
+                    .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .retail")).Text;
+                    
+                }
+                 catch (NoSuchElementException)
+                {
+                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                    continue;
+                }
 
+                // Giá gốc
+                var sellPriceDouble = Double.Parse(sellPrice);
+                var retailDouble = Double.Parse(retail.Replace("%", ""));
+                var originPriceDouble = sellPriceDouble * 100 / (100 - retailDouble);
+                var originPrice = originPriceDouble.ToString();
 
                 // Hình ảnh
                 var nodesDetailImg = element.FindElements(By.CssSelector(".pro-detail__photo .pro-detail-small .swiper-slide img"));
@@ -147,7 +160,8 @@ foreach (var link in listLinkProduct)
                     ProductName = nameProduct,
                     ProductType = TypeProduct,
                     DiscountPrice = sellPrice,
-                    Retail = retail,
+                    OriginPrice = originPrice,
+                    Retail= retail,
                     ProducOrder=(listDataExport.Count+1).ToString()
                  });
             }
