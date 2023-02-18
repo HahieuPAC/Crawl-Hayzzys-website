@@ -23,7 +23,7 @@ var savePathExcel = currentPath.Split("bin")[0] +@"Data Crawl\";
 const string baseUrl = "https://www.hazzys.com";
 
 //List mã loại sản phẩm
-var typeCodes = new List<int>() {1, 2, 3, 4, 5};
+var typeCodes = new List<int>() {1};
 
 // List product crawl
 // List lưu danh sách các sản phẩm Crawl được
@@ -50,9 +50,9 @@ foreach (var typeCode in typeCodes)
 
             if (elements.Count > 0)
             {
+                
                 foreach (var element in elements)
                 {
-                    
 
                     // Lấy link sản phẩm
                     var linkLabelImageProduct = Path.GetFileName(element
@@ -87,6 +87,8 @@ foreach (var link in listLinkProduct)
         {
             foreach (var element in elements)
             {
+                
+
                 // Tên sản phẩm
                 var nameProduct = element
                 .FindElement(By.ClassName("tit-depth02"))
@@ -101,11 +103,6 @@ foreach (var link in listLinkProduct)
                 // Giá bán
                 var sellPrice =  element
                 .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__pay .discount"))
-                .Text;
-
-                // Giá gốc
-                var originPrice = element
-                .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .sale"))
                 .Text;
 
                 //Chênh lệch
@@ -142,6 +139,7 @@ foreach (var link in listLinkProduct)
 
                     }
                 }
+                
 
                  // Thêm sản phẩm vào listDataExport
                  listDataExport.Add(new ProductModel()
@@ -149,8 +147,8 @@ foreach (var link in listLinkProduct)
                     ProductName = nameProduct,
                     ProductType = TypeProduct,
                     DiscountPrice = sellPrice,
-                    OriginPrice = originPrice,
-                    Retail = retail
+                    Retail = retail,
+                    ProducOrder=(listDataExport.Count+1).ToString()
                  });
             }
             break;
