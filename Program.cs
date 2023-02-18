@@ -23,7 +23,7 @@ var savePathExcel = currentPath.Split("bin")[0] +@"Data Crawl\";
 const string baseUrl = "https://www.hazzys.com";
 
 //List mã loại sản phẩm
-var typeCodes = new List<int>() {1};
+var typeCodes = new List<int>() {1, 2, 3, 4, 5};
 
 // List product crawl
 // List lưu danh sách các sản phẩm Crawl được
@@ -72,6 +72,7 @@ foreach (var typeCode in typeCodes)
 //Loop 2
 foreach (var link in listLinkProduct)
 {
+    Console.WriteLine(link);
     var driver = new EdgeDriver(currentPath.Split("bin")[0]);
     driver.Navigate().GoToUrl(link);
     var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(1000));
@@ -80,6 +81,7 @@ foreach (var link in listLinkProduct)
     var stopTime = DateTime.Now.AddMinutes(5);
     while (DateTime.Now < stopTime)
     {
+        
         var elements = driver.FindElements(By.CssSelector(".pro-detail"));
         if (elements.Count > 0)
         {
@@ -91,9 +93,31 @@ foreach (var link in listLinkProduct)
                 .Text
                 .ReplaceMultiToEmpty(new List<string>() { "/", "|", "?", ":", "*", ">", "<"});
 
+                // Phân loại
+                var TypeProduct = element
+                .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-info .txt"))
+                .Text;
+
+                // Giá bán
+                var sellPrice =  element
+                .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__pay .discount"))
+                .Text;
+
+                // Giá gốc
+                var originPrice = element
+                .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .sale"))
+                .Text;
+
+                //Chênh lệch
+                var retail = element
+                .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .retail"))
+                .Text;
+
 
                 // Hình ảnh
-                var nodesDetailImg = element.FindElements(By.CssSelector(".pro-detail__photo .swiper-slide img"));
+                var nodesDetailImg = element.FindElements(By.CssSelector(".pro-detail__photo .pro-detail-small .swiper-slide img"));
+
+                Console.WriteLine(nodesDetailImg.Count);
 
                 var folderPath = Path.Combine(savePathExcel, "Images", nameProduct);
 
@@ -107,15 +131,26 @@ foreach (var link in listLinkProduct)
                     var linkDetailImg = nodeDetailImg.GetAttribute("src");
                     var fileNameImg = Path.GetFileName(linkDetailImg);
                     var filePathImg = Path.Combine(folderPath, fileNameImg);
+                    try
+                    {
+                        WebClient webClient = new WebClient();
+                        webClient.DownloadFile(new Uri(linkDetailImg), filePathImg);
+                    }
+                    catch (WebException ex)
+                    {
+                        Console.WriteLine($"Lỗi tải ảnh từ đường dẫn: {linkDetailImg}, {ex.Message}");
 
-                    WebClient webClient = new WebClient();
-                    webClient.DownloadFile(new Uri(linkDetailImg), filePathImg);
+                    }
                 }
 
                  // Thêm sản phẩm vào listDataExport
                  listDataExport.Add(new ProductModel()
                  {
-                    ProductName = nameProduct
+                    ProductName = nameProduct,
+                    ProductType = TypeProduct,
+                    DiscountPrice = sellPrice,
+                    OriginPrice = originPrice,
+                    Retail = retail
                  });
             }
             break;
@@ -123,8 +158,6 @@ foreach (var link in listLinkProduct)
     }
     driver.Close();
 }
-
-
 
 var fileName = DateTime.Now.Ticks + "_Hayzzys-crawl.xlsx";
 
