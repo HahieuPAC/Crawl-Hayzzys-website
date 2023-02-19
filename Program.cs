@@ -1,12 +1,10 @@
 ﻿using CrawlDataWebsiteTool.Models;
-using CrawlDataWebsiteToolBasic.Functions;
 using CrawlDataWebsiteToolBasic.Helpers;
 using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
 using System.Text;
 using System.Net;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Edge;
 
@@ -23,12 +21,14 @@ var savePathExcel = currentPath.Split("bin")[0] +@"Data Crawl\";
 const string baseUrl = "https://www.hazzys.com";
 
 //List mã loại sản phẩm
-var typeCodes = new List<int>() {1,2,3,4,5};
+var typeCodes = new List<int>() {1};
 
 // List product crawl
 // List lưu danh sách các sản phẩm Crawl được
 var listDataExport = new List<ProductModel>();
 var listLinkProduct = new List<string>();
+var linkProductSet = new HashSet<string>(File.ReadAllLines(currentPath.Split("bin")[0]+"sản phẩm đã lưu.txt"));
+var newLinkProduct = new HashSet<string>();
 
 Console.WriteLine("Please do not turn off the app while crawling!");
 
@@ -59,13 +59,21 @@ foreach (var typeCode in typeCodes)
 
                     var linkProduct =baseUrl + "/product.do?cmd=getProductDetail&PROD_CD=" +linkLabelImageProduct;
 
-                    listLinkProduct.Add(linkProduct);
+                    if (!linkProductSet.Contains(linkProduct))
+                    {
+                        listLinkProduct.Add(linkProduct);
+                        newLinkProduct.Add(linkProduct);
+                    }
+
+                    
                 }
                 break;
             }
         }
         driver.Close();
 }
+File.AppendAllLines(currentPath.Split("bin")[0]+"sản phẩm đã lưu.txt", newLinkProduct);
+
 
 //Loop 2
 foreach (var link in listLinkProduct)
@@ -200,7 +208,8 @@ foreach (var link in listLinkProduct)
                     DiscountPrice = sellPrice,
                     OriginPrice = originPrice,
                     Retail= retail,
-                    ProducOrder=(listDataExport.Count+1).ToString()
+                    ProducOrder=(listDataExport.Count+1).ToString(),
+                    Currency = "원 (won)"
                  });
             }
             break;
