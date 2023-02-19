@@ -88,21 +88,50 @@ foreach (var link in listLinkProduct)
                 
 
                 // Tên sản phẩm
-                var nameProduct = element
-                .FindElement(By.ClassName("tit-depth02"))
-                .Text
-                .ReplaceMultiToEmpty(new List<string>() { "/", "|", "?", ":", "*", ">", "<"});
+                var nameProduct = "";
+                try
+                {
+                    nameProduct = element
+                    .FindElement(By.ClassName("tit-depth02"))
+                    .Text
+                    .ReplaceMultiToEmpty(new List<string>() { "/", "|", "?", ":", "*", ">", "<"});
+                }
+                catch (NoSuchElementException)
+                {
+                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                    nameProduct = "Lấy dữ liệu lỗi";
+                }
+                
 
                 // Phân loại
-                var TypeProduct = element
-                .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-info .txt"))
-                .Text;
+                var typeProduct = "";
+                try
+                {
+                    typeProduct = element
+                    .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-info .txt"))
+                    .Text;
+                }
+                catch (NoSuchElementException)
+                {
+                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                    typeProduct = "Lấy dữ liệu lỗi";
+                }
+               
 
                 // Giá bán
-                var sellPrice = element
+                string sellPrice="";
+                try
+                {
+                    sellPrice = element
                     .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__pay .discount"))
                     .Text
                     .ReplaceMultiToEmpty(new List<string>() { ",","원" });
+                }
+                 catch (NoSuchElementException)
+                {
+                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                    sellPrice = "Lấy dữ liệu lỗi";
+                }
 
                 //Chênh lệch
                 String retail="";
@@ -115,14 +144,23 @@ foreach (var link in listLinkProduct)
                  catch (NoSuchElementException)
                 {
                     Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
-                    continue;
+                    retail = "Lấy dữ liệu lỗi";
                 }
 
                 // Giá gốc
-                var sellPriceDouble = Double.Parse(sellPrice);
-                var retailDouble = Double.Parse(retail.Replace("%", ""));
-                var originPriceDouble = sellPriceDouble * 100 / (100 - retailDouble);
-                var originPrice = originPriceDouble.ToString();
+                String originPrice="";
+
+                try
+                {
+                    originPrice = element
+                    .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .sale")).Text;
+                }
+                 catch (NoSuchElementException)
+                {
+                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                    originPrice = "Lấy dữ liệu lỗi";
+                }
+                
 
                 // Hình ảnh
                 var nodesDetailImg = element.FindElements(By.CssSelector(".pro-detail__photo .pro-detail-small .swiper-slide img"));
@@ -158,7 +196,7 @@ foreach (var link in listLinkProduct)
                  listDataExport.Add(new ProductModel()
                  {
                     ProductName = nameProduct,
-                    ProductType = TypeProduct,
+                    ProductType = typeProduct,
                     DiscountPrice = sellPrice,
                     OriginPrice = originPrice,
                     Retail= retail,
