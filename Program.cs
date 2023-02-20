@@ -82,13 +82,13 @@ foreach (var link in listLinkProduct)
     var driver = new EdgeDriver(currentPath.Split("bin")[0]);
     driver.Navigate().GoToUrl(link);
     var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(1000));
-    wait.Until(d => d.FindElements(By.ClassName("pro-detail")).Count > 0);
+    wait.Until(d => d.FindElements(By.ClassName("pro-img-area")).Count > 0);
 
     var stopTime = DateTime.Now.AddMinutes(5);
     while (DateTime.Now < stopTime)
     {
         
-        var elements = driver.FindElements(By.CssSelector(".pro-detail"));
+        var elements = driver.FindElements(By.CssSelector(".contents"));
         if (elements.Count > 0)
         {
             foreach (var element in elements)
@@ -108,8 +108,7 @@ foreach (var link in listLinkProduct)
                 {
                     Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
                     nameProduct = "Lấy dữ liệu lỗi";
-                }
-                
+                }             
 
                 // Phân loại
                 var typeProduct = "";
@@ -125,7 +124,6 @@ foreach (var link in listLinkProduct)
                     typeProduct = "Lấy dữ liệu lỗi";
                 }
                
-
                 // Giá bán
                 string sellPrice="";
                 try
@@ -168,10 +166,23 @@ foreach (var link in listLinkProduct)
                     Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
                     originPrice = "Lấy dữ liệu lỗi";
                 }
-                
+
+                //Thông tin sản phẩm
+                String infoProduct="";
+
+                try
+                {
+                    infoProduct = element
+                    .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .sale")).Text;
+                }
+                 catch (NoSuchElementException)
+                {
+                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                    originPrice = "Lấy dữ liệu lỗi";
+                }
 
                 // Hình ảnh
-                var nodesDetailImg = element.FindElements(By.CssSelector(".pro-detail__photo .pro-detail-small .swiper-slide img"));
+                var nodesDetailImg = element.FindElements(By.CssSelector(".pro-img-area img"));
 
                 Console.WriteLine(nodesDetailImg.Count);
 
