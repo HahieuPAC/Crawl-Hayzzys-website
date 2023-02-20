@@ -168,18 +168,25 @@ foreach (var link in listLinkProduct)
                 }
 
                 //Thông tin sản phẩm
-                String infoProduct="";
+                var nodeInfoProducts=element.FindElements(By.CssSelector(".view-info__cont p"));
+                
+                var infoProducts = new List<string>();
 
-                try
+                foreach (var nodeInfoProduct in nodeInfoProducts)
                 {
-                    infoProduct = element
-                    .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .sale")).Text;
+                    try
+                    {
+                        infoProducts
+                        .Add(nodeInfoProduct.Text);
+                    }
+                    catch (NoSuchElementException)
+                    {
+                        Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+
+                        infoProducts.Add("Lấy dữ liệu lỗi");
+                    }
                 }
-                 catch (NoSuchElementException)
-                {
-                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
-                    originPrice = "Lấy dữ liệu lỗi";
-                }
+                var infoProduct = string.Join(" \n ", infoProducts);
 
                 // Hình ảnh
                 var nodesDetailImg = element.FindElements(By.CssSelector(".pro-img-area img"));
@@ -220,7 +227,8 @@ foreach (var link in listLinkProduct)
                     OriginPrice = originPrice,
                     Retail= retail,
                     ProducOrder=(listDataExport.Count+1).ToString(),
-                    Currency = "원 (won)"
+                    Currency = "원 (won)",
+                    InfoProduct = infoProduct
                  });
             }
             break;
