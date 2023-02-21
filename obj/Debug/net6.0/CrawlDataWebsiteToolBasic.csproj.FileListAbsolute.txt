@@ -342,3 +342,4 @@ D:\Code\Projects\C#\Crawl-Hayzzys-website\obj\Debug\net6.0\refint\CrawlDataWebsi
 D:\Code\Projects\C#\Crawl-Hayzzys-website\obj\Debug\net6.0\CrawlDataWebsiteToolBasic.pdb
 D:\Code\Projects\C#\Crawl-Hayzzys-website\obj\Debug\net6.0\CrawlDataWebsiteToolBasic.genruntimeconfig.cache
 D:\Code\Projects\C#\Crawl-Hayzzys-website\obj\Debug\net6.0\ref\CrawlDataWebsiteToolBasic.dll
+C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\Markdig.dll

@@ -7,6 +7,9 @@ using System.Net;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Edge;
+using Markdig;
+using System.IO;
+using OfficeOpenXml;
 
 /// 
 /// <param name="currentPath"> Get curent path of project | Lấy đường dẫn của chương trình </param>
@@ -225,7 +228,7 @@ foreach (var link in listLinkProduct)
                 foreach ( var nodeDetailImg in nodesDetailImg)
                 {
                     var linkDetailImg = nodeDetailImg.GetAttribute("src");
-                    var fileNameImg = Path.GetFileName(linkDetailImg);
+                    var fileNameImg = Path.GetFileName(linkDetailImg)+".jpg";
                     var filePathImg = Path.Combine(folderPath, fileNameImg);
                     try
                     {
@@ -267,3 +270,45 @@ var fileName = DateTime.Now.Ticks + "_Hayzzys-crawl.xlsx";
 
 // Export data to Excel
 ExportToExcel<ProductModel>.GenerateExcel(listDataExport, savePathExcel + fileName, "_hayzzys-crawl");
+
+// Read Data from excel file 
+var fileExcel = savePathExcel + fileName;
+var package = new ExcelPackage(new FileInfo(fileExcel));
+var Worksheet = package.Workbook.Worksheets[0];
+var rows = Worksheet.Cells["A2:K100"].ToList();
+
+// Markdow content
+var markdown = new StringBuilder();
+foreach (var row in rows)
+{
+    var name = rows[1].Value.ToString();
+    var type = rows[2].Value.ToString();
+    var intro = rows[3].Value.ToString();
+    var code = rows[4].Value.ToString();
+    var meterial = rows[5].Value.ToString();
+    var mass = rows[6].Value.ToString();
+    var sell = rows[7].Value.ToString();
+    var origin = rows[8].Value.ToString();
+    var retail = rows[9].Value.ToString();
+    var currency = rows[10].Value.ToString();
+
+    markdown.AppendLine($"# {name} ({type})");
+    markdown.AppendLine($"- Mã sản phẩm: {code}");
+    markdown.AppendLine($"- Chất liệu: {meterial}");
+    markdown.AppendLine($"- Khối lượng: {mass}");
+    markdown.AppendLine($"- Giá bán: {sell} {currency}");
+    markdown.AppendLine($"- Giá gốc: {origin} {currency}");
+    markdown.AppendLine($"- giảm giá: {retail} {currency}");
+    markdown.AppendLine();
+    markdown.AppendLine(intro);
+    markdown.AppendLine();
+} 
+
+// Lưu nội dung Markdown vào file
+var mdFileName = DateTime.Now.Ticks + "_Hayzzys-crawl.md";
+var mdFilePath = Path.Combine(savePathExcel, mdFileName);
+if (Directory.Exists(mdFilePath))
+{
+    Directory.CreateDirectory(mdFilePath);
+}
+File.WriteAllText(mdFilePath, markdown.ToString());

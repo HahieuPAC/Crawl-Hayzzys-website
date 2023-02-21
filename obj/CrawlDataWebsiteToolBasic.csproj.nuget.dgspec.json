@@ -56,6 +56,10 @@
               "target": "Package",
               "version": "[1.11.46, )"
             },
+            "Markdig": {
+              "target": "Package",
+              "version": "[0.30.4, )"
+            },
             "Microsoft.AspNet.WebApi.Client": {
               "target": "Package",
               "version": "[5.2.9, )"

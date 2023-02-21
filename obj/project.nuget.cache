@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "AEi9GUsWsnbe3658zRgBJjOLeQepFzJtx+vz4qMXsyZXyFPI6v0OEvTXQEPVvBUIWy5yY9MUlGQ1ma5fVRHQGQ==",
+  "dgSpecHash": "Ki/mDDT8LNhaFWYx2WxYOkPjpGZA/cZ0og1WTciWjc4tpeCGdeXWI9B++/rnIHq7BWdnIljx+lC5vF4ObnMDaw==",
   "success": true,
   "projectFilePath": "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,7 @@
     "C:\\Users\\HIeu\\.nuget\\packages\\fizzler\\1.2.0\\fizzler.1.2.0.nupkg.sha512",
     "C:\\Users\\HIeu\\.nuget\\packages\\fizzler.systems.htmlagilitypack\\1.2.1\\fizzler.systems.htmlagilitypack.1.2.1.nupkg.sha512",
     "C:\\Users\\HIeu\\.nuget\\packages\\htmlagilitypack\\1.11.46\\htmlagilitypack.1.11.46.nupkg.sha512",
+    "C:\\Users\\HIeu\\.nuget\\packages\\markdig\\0.30.4\\markdig.0.30.4.nupkg.sha512",
     "C:\\Users\\HIeu\\.nuget\\packages\\microsoft.aspnet.webapi.client\\5.2.9\\microsoft.aspnet.webapi.client.5.2.9.nupkg.sha512",
     "C:\\Users\\HIeu\\.nuget\\packages\\microsoft.extensions.configuration\\5.0.0\\microsoft.extensions.configuration.5.0.0.nupkg.sha512",
     "C:\\Users\\HIeu\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\5.0.0\\microsoft.extensions.configuration.abstractions.5.0.0.nupkg.sha512",
