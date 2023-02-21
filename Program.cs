@@ -167,27 +167,49 @@ foreach (var link in listLinkProduct)
                     originPrice = "Lấy dữ liệu lỗi";
                 }
 
-                //Thông tin sản phẩm
-                var nodeInfoProducts=element.FindElements(By.CssSelector(".view-info__cont p"));
+                //Giới thiệu sản phẩm
+                var nodeIntroProducts=element.FindElements(By.CssSelector(".view-info__cont p"));
                 
-                var infoProducts = new List<string>();
+                var introProducts = new List<string>();
 
-                foreach (var nodeInfoProduct in nodeInfoProducts)
+                foreach (var nodeIntroProduct in nodeIntroProducts)
                 {
                     try
                     {
-                        infoProducts
-                        .Add(nodeInfoProduct.Text);
+                        introProducts
+                        .Add(nodeIntroProduct.Text);
                     }
                     catch (NoSuchElementException)
                     {
                         Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
 
-                        infoProducts.Add("Lấy dữ liệu lỗi");
+                        introProducts.Add("Lấy dữ liệu lỗi");
                     }
                 }
-                var infoProduct = string.Join(" \n ", infoProducts);
+                var introProduct = string.Join(" \n ", introProducts);
 
+                // Mã sản phẩm, trọng lượng, nguyên liệu
+                var nodeInfoes = element.FindElements(By.CssSelector(".box-line.box-line__tb2 .box-line__list li span"));
+                var infoes = new List<string>();
+                Console.WriteLine(nodeInfoes.Count);
+                foreach (var nodeInfo in nodeInfoes)
+                {
+                    Console.WriteLine(nodeInfo.Displayed);
+                    try
+                    {
+                        infoes.Add(nodeInfo.Text);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                        
+                    }
+                }
+
+                var productCode = infoes[0];
+                var meterial = infoes[1];
+                var mass = infoes[2];
+               
                 // Hình ảnh
                 var nodesDetailImg = element.FindElements(By.CssSelector(".pro-img-area img"));
 
@@ -228,7 +250,10 @@ foreach (var link in listLinkProduct)
                     Retail= retail,
                     ProducOrder=(listDataExport.Count+1).ToString(),
                     Currency = "원 (won)",
-                    InfoProduct = infoProduct
+                    IntroProduct = introProduct,
+                    ProductCode = productCode,
+                    Meterial = meterial,
+                    Mass = mass
                  });
             }
             break;
