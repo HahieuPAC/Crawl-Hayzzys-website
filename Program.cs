@@ -19,7 +19,7 @@ using OfficeOpenXml;
 
 
 var currentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? "";
-var savePathExcel = currentPath.Split("bin")[0] +@"Data Crawl\";
+var savePathExcel = currentPath.Split("bin")[0] +@"Data-Crawl\";
 
 const string baseUrl = "https://www.hazzys.com";
 
@@ -194,10 +194,8 @@ foreach (var link in listLinkProduct)
                 // Mã sản phẩm, trọng lượng, nguyên liệu
                 var nodeInfoes = element.FindElements(By.CssSelector(".box-line.box-line__tb2 .box-line__list li span"));
                 var infoes = new List<string>();
-                Console.WriteLine(nodeInfoes.Count);
                 foreach (var nodeInfo in nodeInfoes)
                 {
-                    Console.WriteLine(nodeInfo.Displayed);
                     try
                     {
                         infoes.Add(nodeInfo.Text);
@@ -215,8 +213,6 @@ foreach (var link in listLinkProduct)
                
                 // Hình ảnh
                 var nodesDetailImg = element.FindElements(By.CssSelector(".pro-img-area img"));
-
-                Console.WriteLine(nodesDetailImg.Count);
 
                 var folderPath = Path.Combine(savePathExcel, "Images", nameProduct);
 
@@ -275,40 +271,45 @@ ExportToExcel<ProductModel>.GenerateExcel(listDataExport, savePathExcel + fileNa
 var fileExcel = savePathExcel + fileName;
 var package = new ExcelPackage(new FileInfo(fileExcel));
 var Worksheet = package.Workbook.Worksheets[0];
-var rows = Worksheet.Cells["A2:K100"].ToList();
+var rows = Worksheet.Cells[Worksheet.Dimension.Address].GroupBy(cell => cell.Start.Row).Skip(1).ToList();
+Console.WriteLine(rows.Count);
 
-// Markdow content
-var markdown = new StringBuilder();
+// Duyệt từng hàng
 foreach (var row in rows)
 {
-    var name = rows[1].Value.ToString();
-    var type = rows[2].Value.ToString();
-    var intro = rows[3].Value.ToString();
-    var code = rows[4].Value.ToString();
-    var meterial = rows[5].Value.ToString();
-    var mass = rows[6].Value.ToString();
-    var sell = rows[7].Value.ToString();
-    var origin = rows[8].Value.ToString();
-    var retail = rows[9].Value.ToString();
-    var currency = rows[10].Value.ToString();
+    var rowData = new List<string>();
+    
+    foreach (var cell in row)
+    {
+        rowData.Add(cell.Value.ToString());
+    }
+    var markdown = new StringBuilder();
+    var name = rowData[1];
+    var type = rowData[2];
+    var intro = rowData[3];
+    var code = rowData[4];
+    var material = rowData[5];
+    var mass = rowData[6];
+    var sell = rowData[7];
+    var origin = rowData[8];
+    var retail = rowData[9];
+    var currency = rowData[10];
 
     markdown.AppendLine($"# {name} ({type})");
     markdown.AppendLine($"- Mã sản phẩm: {code}");
-    markdown.AppendLine($"- Chất liệu: {meterial}");
+    markdown.AppendLine($"- Chất liệu: {material}");
     markdown.AppendLine($"- Khối lượng: {mass}");
     markdown.AppendLine($"- Giá bán: {sell} {currency}");
     markdown.AppendLine($"- Giá gốc: {origin} {currency}");
-    markdown.AppendLine($"- giảm giá: {retail} {currency}");
+    markdown.AppendLine($"- Giảm giá: {retail} {currency}");
+    
     markdown.AppendLine();
     markdown.AppendLine(intro);
-    markdown.AppendLine();
-} 
+    markdown.AppendLine(); 
 
-// Lưu nội dung Markdown vào file
-var mdFileName = DateTime.Now.Ticks + "_Hayzzys-crawl.md";
-var mdFilePath = Path.Combine(savePathExcel, mdFileName);
-if (Directory.Exists(mdFilePath))
-{
-    Directory.CreateDirectory(mdFilePath);
+    // Save MD file
+    var mdFileName = name+".md";
+    var mdFilePath = Path.Combine(savePathExcel, "md-file", mdFileName);
+    File.WriteAllText(mdFilePath, markdown.ToString());
+
 }
-File.WriteAllText(mdFilePath, markdown.ToString());
