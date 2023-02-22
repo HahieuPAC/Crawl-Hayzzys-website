@@ -30,7 +30,7 @@ var typeCodes = new List<int>() {1};
 // List lưu danh sách các sản phẩm Crawl được
 var listDataExport = new List<ProductModel>();
 var listLinkProduct = new List<string>();
-var linkProductSet = new HashSet<string>(File.ReadAllLines(currentPath.Split("bin")[0]+"sản phẩm đã lưu.txt"));
+var linkProductSet = new HashSet<string>(File.ReadAllLines(currentPath.Split("bin")[0]+"saved-product.txt"));
 var newLinkProduct = new HashSet<string>();
 
 Console.WriteLine("Please do not turn off the app while crawling!");
@@ -75,7 +75,7 @@ foreach (var typeCode in typeCodes)
         }
         driver.Close();
 }
-File.AppendAllLines(currentPath.Split("bin")[0]+"sản phẩm đã lưu.txt", newLinkProduct);
+File.AppendAllLines(currentPath.Split("bin")[0]+"saved-product.txt", newLinkProduct);
 
 
 //Loop 2
@@ -189,7 +189,7 @@ foreach (var link in listLinkProduct)
                         introProducts.Add("Lấy dữ liệu lỗi");
                     }
                 }
-                var introProduct = string.Join(" \n ", introProducts);
+                var introProduct = string.Join("\n ", introProducts);
 
                 // Mã sản phẩm, trọng lượng, nguyên liệu
                 var nodeInfoes = element.FindElements(By.CssSelector(".box-line.box-line__tb2 .box-line__list li span"));
