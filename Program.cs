@@ -272,7 +272,6 @@ var fileExcel = savePathExcel + fileName;
 var package = new ExcelPackage(new FileInfo(fileExcel));
 var Worksheet = package.Workbook.Worksheets[0];
 var rows = Worksheet.Cells[Worksheet.Dimension.Address].GroupBy(cell => cell.Start.Row).Skip(1).ToList();
-Console.WriteLine(rows.Count);
 
 // Duyệt từng hàng
 foreach (var row in rows)
@@ -310,6 +309,10 @@ foreach (var row in rows)
     // Save MD file
     var mdFileName = name+".md";
     var mdFilePath = Path.Combine(savePathExcel, "md-file", mdFileName);
+    if (!Directory.Exists(mdFilePath))
+    {
+        Directory.CreateDirectory(mdFilePath);
+    }
     File.WriteAllText(mdFilePath, markdown.ToString());
 
 }
