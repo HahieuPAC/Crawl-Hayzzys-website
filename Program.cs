@@ -241,10 +241,22 @@ foreach (var link in listLinkProduct)
                         var linkDetailImg = await nodeDetailImg.EvaluateFunctionAsync<string>("e => e.src");
                         var fileNameImg = Path.GetFileName(linkDetailImg)+".jpg";
                         var filePathImg = Path.Combine(folderPath, fileNameImg);
-                        try
+                       try
                         {
-                            WebClient webClient = new WebClient();
-                            webClient.DownloadFile(new Uri(linkDetailImg), filePathImg);
+                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkDetailImg);
+                            request.Timeout = 30000;
+
+                            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+                            using (Stream responseStream = response.GetResponseStream())
+                            using (Stream fileStream = File.Create(filePathImg))
+                            {
+                                byte[] buffer = new byte[4096];
+                                int bytesRead;
+                                while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
+                                {
+                                    fileStream.Write(buffer, 0, bytesRead);
+                                }
+                            }
                         }
                         catch (WebException ex)
                         {
