@@ -10,7 +10,12 @@ using OpenQA.Selenium.Edge;
 using Markdig;
 using System.IO;
 using OfficeOpenXml;
-
+using PuppeteerSharp;
+// /khởi tạo đối tượng LaunchOptions với thuộc tính Headless được set bằng true. Nếu Headless là true, browser sẽ chạy ở chế độ headless (không có giao diện người dùng).
+var options = new LaunchOptions
+{
+    Headless = true // set to true if you want to run the browser in headless mode
+};
 /// 
 /// <param name="currentPath"> Get curent path of project | Lấy đường dẫn của chương trình </param>
 /// <param name="savePathExcel"> Path save excel file | Đường dẫn để lưu file excel </param>
@@ -35,21 +40,27 @@ var newLinkProduct = new HashSet<string>();
 
 Console.WriteLine("Please do not turn off the app while crawling!");
 
+// Sử dụng đối tượng BrowserFetcher để tải xuống phiên bản mới nhất của Chromium browser được sử dụng bởi PuppeteerSharp.
+await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+
 //Loop 1
 foreach (var typeCode in typeCodes)
 {
     var requestUrl = baseUrl + $"/display.do?cmd=getTCategoryMain&TCAT_CD=1000{typeCode}";
-    Console.WriteLine(requestUrl);
 
-    var driver = new EdgeDriver(currentPath.Split("bin")[0]);
-    driver.Navigate().GoToUrl(requestUrl);
-    var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(1000));
-    wait.Until(d => d.FindElements(By.ClassName("pro-wrap__items")).Count > 0);
+    // Khởi tạo trình duyệt
+    using (var browser = await Puppeteer.LaunchAsync(options))
+    using (var page = await browser.NewPageAsync())
+    {
+        await page.GoToAsync(requestUrl);
+        await page.WaitForSelectorAsync(".gnb-wrap__menu", new WaitForSelectorOptions { Timeout = 60000 });
+        // do something with the page
 
-    var stopTime = DateTime.Now.AddMinutes(5);
+        var stopTime = DateTime.Now.AddMinutes(5);
         while (DateTime.Now < stopTime)
         {
-            var elements = driver.FindElements(By.ClassName("pro-wrap__items"));
+            var elements = (await page.QuerySelectorAllAsync (".pro-wrap__items"))
+            .ToList();
 
             if (elements.Count > 0)
             {
@@ -58,7 +69,7 @@ foreach (var typeCode in typeCodes)
                 {
 
                     // Lấy link sản phẩm
-                    var linkLabelImageProduct = element.GetAttribute("id");
+                    var linkLabelImageProduct = await element.EvaluateFunctionAsync<string>("e => e.id");
 
                     var linkProduct =baseUrl + "/product.do?cmd=getProductDetail&PROD_CD=" +linkLabelImageProduct;
 
@@ -67,198 +78,199 @@ foreach (var typeCode in typeCodes)
                         listLinkProduct.Add(linkProduct);
                         newLinkProduct.Add(linkProduct);
                     }
-
-                    
                 }
                 break;
             }
         }
-        driver.Close();
+    }
 }
-File.AppendAllLines(currentPath.Split("bin")[0]+"saved-product.txt", newLinkProduct);
 
 
-//Loop 2
+// Loop 2
 foreach (var link in listLinkProduct)
 {
-    Console.WriteLine(link);
-    var driver = new EdgeDriver(currentPath.Split("bin")[0]);
-    driver.Navigate().GoToUrl(link);
-    var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(1000));
-    wait.Until(d => d.FindElements(By.ClassName("pro-img-area")).Count > 0);
 
-    var stopTime = DateTime.Now.AddMinutes(5);
-    while (DateTime.Now < stopTime)
+    // Khởi tạo trình duyệt
+    using (var browser = await Puppeteer.LaunchAsync(options))
+    using (var page = await browser.NewPageAsync())
     {
-        
-        var elements = driver.FindElements(By.CssSelector(".contents"));
-        if (elements.Count > 0)
+        await page.GoToAsync(link, new NavigationOptions { Timeout = 60000 });
+        await page.WaitForSelectorAsync(".pro-img-area", new WaitForSelectorOptions { Timeout = 120000});
+        // do something with the page
+
+        while (true)
         {
-            foreach (var element in elements)
+            var elements = (await page.QuerySelectorAllAsync (".contents"))
+            .ToList();
+            
+             if (elements.Count == 0 || await page.EvaluateExpressionAsync<bool>("window.innerHeight + window.scrollY >= document.body.scrollHeight"))
             {
-                
+                break;
+            }
 
-                // Tên sản phẩm
-                var nameProduct = "";
-                try
-                {
-                    nameProduct = element
-                    .FindElement(By.ClassName("tit-depth02"))
-                    .Text
-                    .ReplaceMultiToEmpty(new List<string>() { "/", "|", "?", ":", "*", ">", "<"});
-                }
-                catch (NoSuchElementException)
-                {
-                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
-                    nameProduct = "Lấy dữ liệu lỗi";
-                }             
+               // scroll xuống dưới trang để tải thêm phần tử
+            await page.EvaluateExpressionAsync("window.scrollBy(0, window.innerHeight)");
+            await page.WaitForTimeoutAsync(1000);
 
-                // Phân loại
-                var typeProduct = "";
-                try
+             if (elements.Count > 0)
+            {
+                foreach (var element in elements)
                 {
-                    typeProduct = element
-                    .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-info .txt"))
-                    .Text;
-                }
-                catch (NoSuchElementException)
-                {
-                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
-                    typeProduct = "Lấy dữ liệu lỗi";
-                }
-               
-                // Giá bán
-                string sellPrice="";
-                try
-                {
-                    sellPrice = element
-                    .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__pay .discount"))
-                    .Text
-                    .ReplaceMultiToEmpty(new List<string>() { ",","원" });
-                }
-                 catch (NoSuchElementException)
-                {
-                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
-                    sellPrice = "Lấy dữ liệu lỗi";
-                }
-
-                //Chênh lệch
-                String retail="";
-                try 
-                {
-                    retail = element
-                    .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .retail")).Text;
-                    
-                }
-                 catch (NoSuchElementException)
-                {
-                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
-                    retail = "Lấy dữ liệu lỗi";
-                }
-
-                // Giá gốc
-                String originPrice="";
-
-                try
-                {
-                    originPrice = element
-                    .FindElement(By.CssSelector(".pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .sale")).Text;
-                }
-                 catch (NoSuchElementException)
-                {
-                    Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
-                    originPrice = "Lấy dữ liệu lỗi";
-                }
-
-                //Giới thiệu sản phẩm
-                var nodeIntroProducts=element.FindElements(By.CssSelector(".view-info__cont p"));
-                
-                var introProducts = new List<string>();
-
-                foreach (var nodeIntroProduct in nodeIntroProducts)
-                {
+                     // Tên sản phẩm
+                    var nameProduct = "";
                     try
                     {
-                        introProducts
-                        .Add(nodeIntroProduct.Text);
+                        nameProduct = await element.EvaluateFunctionAsync<string>("() => document.querySelector('.tit-depth02').textContent");
                     }
                     catch (NoSuchElementException)
                     {
                         Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                        nameProduct = "Lấy dữ liệu lỗi";
+                    }       
+                    Console.WriteLine(nameProduct);
 
-                        introProducts.Add("Lấy dữ liệu lỗi");
-                    }
-                }
-                var introProduct = string.Join("\n ", introProducts);
-
-                // Mã sản phẩm, trọng lượng, nguyên liệu
-                var nodeInfoes = element.FindElements(By.CssSelector(".box-line.box-line__tb2 .box-line__list li span"));
-                var infoes = new List<string>();
-                foreach (var nodeInfo in nodeInfoes)
-                {
+                    // Phân loại
+                     var typeProduct = "";
                     try
                     {
-                        infoes.Add(nodeInfo.Text);
+                        typeProduct =
+                         await element.EvaluateFunctionAsync<string>("() => document.querySelector('.pro-detail__cont .pro-detail__cont--aside .box-info .txt').textContent");
                     }
-                    catch
+                    catch (NoSuchElementException)
                     {
                         Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
-                        
+                        typeProduct = "Lấy dữ liệu lỗi";
                     }
-                }
 
-                var productCode = infoes[0];
-                var meterial = infoes[1];
-                var mass = infoes[2];
-               
-                // Hình ảnh
-                var nodesDetailImg = element.FindElements(By.CssSelector(".pro-img-area img"));
-
-                var folderPath = Path.Combine(savePathExcel, "Images", nameProduct);
-
-                if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                }
-
-                foreach ( var nodeDetailImg in nodesDetailImg)
-                {
-                    var linkDetailImg = nodeDetailImg.GetAttribute("src");
-                    var fileNameImg = Path.GetFileName(linkDetailImg)+".jpg";
-                    var filePathImg = Path.Combine(folderPath, fileNameImg);
+                     // Giá bán
+                    string sellPrice="";
                     try
                     {
-                        WebClient webClient = new WebClient();
-                        webClient.DownloadFile(new Uri(linkDetailImg), filePathImg);
+                        sellPrice = 
+                        (await element.EvaluateFunctionAsync<string>("() => document.querySelector('.pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__pay .discount').textContent"))
+                        .ReplaceMultiToEmpty(new List<string>() {"원"});
                     }
-                    catch (WebException ex)
+                    catch (NoSuchElementException)
                     {
-                        Console.WriteLine($"Lỗi tải ảnh từ đường dẫn: {linkDetailImg}, {ex.Message}");
-
+                        Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                        sellPrice = "Lấy dữ liệu lỗi";
                     }
-                }
-                
 
-                 // Thêm sản phẩm vào listDataExport
-                 listDataExport.Add(new ProductModel()
-                 {
-                    ProductName = nameProduct,
-                    ProductType = typeProduct,
-                    DiscountPrice = sellPrice,
-                    OriginPrice = originPrice,
-                    Retail= retail,
-                    ProducOrder=(listDataExport.Count+1).ToString(),
-                    Currency = "원 (won)",
-                    IntroProduct = introProduct,
-                    ProductCode = productCode,
-                    Meterial = meterial,
-                    Mass = mass
-                 });
+                    // Giá gốc
+                    String originPrice="";
+
+                    try
+                    {
+                        originPrice = await element.EvaluateFunctionAsync<string>("() => document.querySelector('.pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .sale').textContent");
+                    }
+                    catch (NoSuchElementException)
+                    {
+                        Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                        originPrice = "Lấy dữ liệu lỗi";
+                    }
+
+                      //Chênh lệch
+                    String retail="";
+                    try 
+                    {
+                        retail = await element.EvaluateFunctionAsync<string>("() => document.querySelector('.pro-detail__cont .pro-detail__cont--aside .box-cash .box-cash__sale .retail').textContent");
+                        
+                    }
+                    catch (NoSuchElementException)
+                    {
+                        Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                        retail = "Lấy dữ liệu lỗi";
+                    }
+
+                    //Giới thiệu sản phẩm
+                    var nodeIntroProducts= await element.QuerySelectorAllAsync(".view-info__cont p");
+                    
+                    var introProducts = new List<string>();
+
+                    foreach (var nodeIntroProduct in nodeIntroProducts)
+                    {
+                        try
+                        {
+                            introProducts
+                            .Add((await nodeIntroProduct.EvaluateFunctionAsync<string>("node => node.textContent")).TrimStart());
+                        }
+                        catch (NoSuchElementException)
+                        {
+                            Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+
+                            introProducts.Add("Lấy dữ liệu lỗi");
+                        }
+                    }
+                    var introProduct = string.Join("\n", introProducts);
+
+                     // Mã sản phẩm, trọng lượng, nguyên liệu
+                    var nodeInfoes = await element.QuerySelectorAllAsync(".box-line.box-line__tb2 .box-line__list li span");
+                    var infoes = new List<string>();
+                    foreach (var nodeInfo in nodeInfoes)
+                    {
+                        try
+                        {
+                            infoes.Add(await nodeInfo.EvaluateFunctionAsync<string>("node => node.textContent"));
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                            
+                        }
+                    }
+
+                    var productCode = infoes[0];
+                    var meterial = infoes[1];
+                    var mass = infoes[2];
+
+                     // Hình ảnh
+                    var nodesDetailImg = await element.QuerySelectorAllAsync(".pro-img-area img");
+
+                    var folderPath = Path.Combine(savePathExcel, "Images", nameProduct);
+
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+
+                    foreach ( var nodeDetailImg in nodesDetailImg)
+                    {
+                        var linkDetailImg = await nodeDetailImg.EvaluateFunctionAsync<string>("e => e.src");
+                        var fileNameImg = Path.GetFileName(linkDetailImg)+".jpg";
+                        var filePathImg = Path.Combine(folderPath, fileNameImg);
+                        try
+                        {
+                            WebClient webClient = new WebClient();
+                            webClient.DownloadFile(new Uri(linkDetailImg), filePathImg);
+                        }
+                        catch (WebException ex)
+                        {
+                            Console.WriteLine($"Lỗi tải ảnh từ đường dẫn: {linkDetailImg}, {ex.Message}");
+
+                        }
+                    }
+
+                    // Thêm sản phẩm vào listDataExport
+                    listDataExport.Add(new ProductModel()
+                    {
+                        ProductName = nameProduct,
+                        ProductType = typeProduct,
+                        DiscountPrice = sellPrice,
+                        OriginPrice = originPrice,
+                        Retail= retail,
+                        ProducOrder=(listDataExport.Count+1).ToString(),
+                        Currency = "원 (won)",
+                        IntroProduct = introProduct,
+                        ProductCode = productCode,
+                        Meterial = meterial,
+                        Mass = mass
+                    });
+                }
             }
             break;
         }
     }
-    driver.Close();
+    
 }
 
 var fileName = DateTime.Now.Ticks + "_Hayzzys-crawl.xlsx";
@@ -266,6 +278,7 @@ var fileName = DateTime.Now.Ticks + "_Hayzzys-crawl.xlsx";
 
 // Export data to Excel
 ExportToExcel<ProductModel>.GenerateExcel(listDataExport, savePathExcel + fileName, "_hayzzys-crawl");
+File.AppendAllLines(currentPath.Split("bin")[0]+"saved-product.txt", newLinkProduct);
 
 // Read Data from excel file 
 var fileExcel = savePathExcel + fileName;

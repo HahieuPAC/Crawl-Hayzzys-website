@@ -343,3 +343,12 @@ D:\Code\Projects\C#\Crawl-Hayzzys-website\obj\Debug\net6.0\CrawlDataWebsiteToolB
 D:\Code\Projects\C#\Crawl-Hayzzys-website\obj\Debug\net6.0\CrawlDataWebsiteToolBasic.genruntimeconfig.cache
 D:\Code\Projects\C#\Crawl-Hayzzys-website\obj\Debug\net6.0\ref\CrawlDataWebsiteToolBasic.dll
 C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\Markdig.dll
+C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.AspNetCore.WebUtilities.dll
+C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
+C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
+C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Net.Http.Headers.dll
+C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\PuppeteerSharp.dll
+C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\ICSharpCode.SharpZipLib.dll

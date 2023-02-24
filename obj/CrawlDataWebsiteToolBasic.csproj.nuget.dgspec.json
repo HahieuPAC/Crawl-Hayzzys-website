@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Get HTML code from Web\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj": {}
+    "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj": {}
   },
   "projects": {
-    "c:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Get HTML code from Web\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj": {
+    "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Get HTML code from Web\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
+        "projectUniqueName": "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
         "projectName": "CrawlDataWebsiteToolBasic",
-        "projectPath": "c:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Get HTML code from Web\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
+        "projectPath": "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
         "packagesPath": "C:\\Users\\HIeu\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Get HTML code from Web\\Crawl-Hayzzys-website\\obj\\",
+        "outputPath": "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
