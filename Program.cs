@@ -98,8 +98,8 @@ foreach (var link in listLinkProduct)
     using (var browser = await Puppeteer.LaunchAsync(options))
     using (var page = await browser.NewPageAsync())
     {
-        await page.GoToAsync(link, new NavigationOptions { Timeout = 120000 });
-        await page.WaitForSelectorAsync(".pro-img-area", new WaitForSelectorOptions { Timeout = 120000});
+        await page.GoToAsync(link, new NavigationOptions { Timeout = 300000 });
+        await page.WaitForSelectorAsync(".pro-img-area", new WaitForSelectorOptions { Timeout = 300000});
         // do something with the page
 
         while (true)

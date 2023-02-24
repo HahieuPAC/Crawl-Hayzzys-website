@@ -352,3 +352,13 @@ C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\
 C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Net.Http.Headers.dll
 C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\PuppeteerSharp.dll
 C:\Users\HIeu\Documents\Project\C#\Crawl\Crawl-Hayzzys-website\bin\Debug\net6.0\ICSharpCode.SharpZipLib.dll
+D:\Code\Projects\C#\Crawl-Hayzzys-website\bin\Debug\net6.0\Markdig.dll
+D:\Code\Projects\C#\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.AspNetCore.WebUtilities.dll
+D:\Code\Projects\C#\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Code\Projects\C#\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Code\Projects\C#\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
+D:\Code\Projects\C#\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Code\Projects\C#\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
+D:\Code\Projects\C#\Crawl-Hayzzys-website\bin\Debug\net6.0\Microsoft.Net.Http.Headers.dll
+D:\Code\Projects\C#\Crawl-Hayzzys-website\bin\Debug\net6.0\PuppeteerSharp.dll
+D:\Code\Projects\C#\Crawl-Hayzzys-website\bin\Debug\net6.0\ICSharpCode.SharpZipLib.dll
