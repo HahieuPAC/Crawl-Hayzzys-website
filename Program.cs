@@ -131,7 +131,6 @@ foreach (var link in listLinkProduct)
                         Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
                         nameProduct = "Lấy dữ liệu lỗi";
                     }       
-                    Console.WriteLine(nameProduct);
 
                     // Phân loại
                      var typeProduct = "";
