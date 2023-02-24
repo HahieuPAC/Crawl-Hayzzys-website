@@ -327,7 +327,7 @@ foreach (var row in rows)
     var mdFilePath = Path.Combine(savePathExcel, "md-file", mdFileName);
     if (!Directory.Exists(mdFilePath))
     {
-        Directory.CreateDirectory(mdFilePath);
+        Directory.CreateDirectory(Path.GetDirectoryName(mdFilePath));
     }
     File.WriteAllText(mdFilePath, markdown.ToString());
 
