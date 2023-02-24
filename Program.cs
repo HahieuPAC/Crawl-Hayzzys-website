@@ -24,7 +24,11 @@ var options = new LaunchOptions
 
 
 var currentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? "";
-var savePathExcel = currentPath.Split("bin")[0] +@"Data-Crawl\";
+var savePathExcel = currentPath.Split("bin")[0] +@"data-crawl\";
+if (!Directory.Exists(savePathExcel))
+    {
+        Directory.CreateDirectory(savePathExcel);
+    }
 
 const string baseUrl = "https://www.hazzys.com";
 
@@ -226,7 +230,7 @@ foreach (var link in listLinkProduct)
                      // Hình ảnh
                     var nodesDetailImg = await element.QuerySelectorAllAsync(".pro-img-area img");
 
-                    var folderPath = Path.Combine(savePathExcel, "Images", nameProduct);
+                    var folderPath = Path.Combine(savePathExcel, "images", nameProduct);
 
                     if (!Directory.Exists(folderPath))
                     {
