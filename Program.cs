@@ -239,7 +239,7 @@ foreach (var link in listLinkProduct)
                     foreach ( var nodeDetailImg in nodesDetailImg)
                     {
                         var linkDetailImg = await nodeDetailImg.EvaluateFunctionAsync<string>("e => e.src");
-                        var fileNameImg = Path.GetFileName(linkDetailImg)+".jpg";
+                        var fileNameImg = Path.GetFileName(linkDetailImg);
                         var filePathImg = Path.Combine(folderPath, fileNameImg);
                        try
                         {
