@@ -229,7 +229,7 @@ foreach (var link in listLinkProduct)
                      // Hình ảnh
                     var nodesDetailImg = await element.QuerySelectorAllAsync(".pro-img-area img");
 
-                    var folderPath = Path.Combine(savePathExcel, "images", nameProduct);
+                    var folderPath = Path.Combine(savePathExcel, "images", productCode);
 
                     if (!Directory.Exists(folderPath))
                     {
@@ -321,6 +321,10 @@ foreach (var row in rows)
     var origin = rowData[8];
     var retail = rowData[9];
     var currency = rowData[10];
+    string [] filesImg = Directory.GetFiles(Path.Combine(savePathExcel, "images", code));
+    int numImg= filesImg.Length;
+
+
 
     markdown.AppendLine($"# {name} ({type})");
     markdown.AppendLine($"- Mã sản phẩm: {code}");
@@ -329,6 +333,11 @@ foreach (var row in rows)
     markdown.AppendLine($"- Giá bán: {sell} {currency}");
     markdown.AppendLine($"- Giá gốc: {origin} {currency}");
     markdown.AppendLine($"- Giảm giá: {retail} {currency}");
+    for (int i = 0; i < numImg; i++)
+    {
+        var nameFileImg = Path.GetFileName(filesImg[i]);
+        markdown.AppendLine($"image{i+1}: image/{code}/{nameFileImg}");
+    }
     
     markdown.AppendLine();
     markdown.AppendLine(intro);
