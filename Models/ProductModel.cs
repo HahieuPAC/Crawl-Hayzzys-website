@@ -15,5 +15,11 @@ namespace CrawlDataWebsiteTool.Models
         [Description("Giá gốc")] public string OriginPrice { get; set; }
         [Description("Chênh lệch")] public string Retail { get; set; }
         [Description("Tiền Tệ")] public string Currency { get; set; }
+        [Description("Season")] public string Season{ get; set; }
+        [Description("Type")] public string Type{ get; set; }
+        [Description("Gender")] public string Gender { get; set; }
+        [Description("Size")] public string Size { get; set; }
+        [Description("countryOfOrigin")] public string CountryOfOrigin { get; set; }
+        [Description("Detail")] public string Detail { get; set; }
     }
 }

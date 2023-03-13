@@ -93,6 +93,7 @@ foreach (var typeCode in typeCodes)
 // Loop 2
 foreach (var link in listLinkProduct)
 {
+    Console.WriteLine(link);
 
     // Khởi tạo trình duyệt
     using (var browser = await Puppeteer.LaunchAsync(options))
@@ -196,6 +197,7 @@ foreach (var link in listLinkProduct)
                         {
                             introProducts
                             .Add((await nodeIntroProduct.EvaluateFunctionAsync<string>("node => node.textContent")).TrimStart());
+                            
                         }
                         catch (NoSuchElementException)
                         {
@@ -204,7 +206,8 @@ foreach (var link in listLinkProduct)
                             introProducts.Add("Lấy dữ liệu lỗi");
                         }
                     }
-                    var introProduct = string.Join("\n", introProducts);
+                    var introProduct = string.Join("\n", introProducts[0]);
+                    Console.WriteLine(introProduct);
 
                      // Mã sản phẩm, trọng lượng, nguyên liệu
                     var nodeInfoes = await element.QuerySelectorAllAsync(".box-line.box-line__tb2 .box-line__list li span");
@@ -225,6 +228,29 @@ foreach (var link in listLinkProduct)
                     var productCode = infoes[0];
                     var meterial = infoes[1];
                     var mass = infoes[2];
+
+                    //Thông tin chi tiết
+                    var obj_open = (await element.QuerySelectorAllAsync(".list-acc-wrap__item .obj-open td, .tbl-wrap tr td")).ToList();
+                    var detailInfo = new List<string>();
+                    for (int i = 0; i < obj_open.Count; i++)
+                    {
+                        try
+                        {
+                            var text_if = await obj_open[i].EvaluateFunctionAsync<string>("node => node.textContent");
+                            detailInfo.Add(text_if);
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Không tìm thấy đối tượng, bỏ qua và tiếp tục chương trình");
+                            
+                        }
+                    }
+
+                    var season = detailInfo[21];
+                    var type = detailInfo[42];
+                    var gender = detailInfo[20];
+                    var size = detailInfo[40];
+                    var countryOfOrigin = detailInfo[36];
 
                      // Hình ảnh
                     var nodesDetailImg = await element.QuerySelectorAllAsync(".pro-img-area img");
@@ -278,7 +304,12 @@ foreach (var link in listLinkProduct)
                         IntroProduct = introProduct,
                         ProductCode = productCode,
                         Meterial = meterial,
-                        Mass = mass
+                        Mass = mass,
+                        Season = season,
+                        Type = type,
+                        Gender = gender,
+                        Size = size,
+                        CountryOfOrigin = countryOfOrigin,
                     });
                 }
             }
@@ -325,7 +356,6 @@ foreach (var row in rows)
     int numImg= filesImg.Length;
 
 
-
     markdown.AppendLine($"# {name} ({type})");
     markdown.AppendLine($"- Mã sản phẩm: {code}");
     markdown.AppendLine($"- Chất liệu: {material}");
@@ -333,10 +363,11 @@ foreach (var row in rows)
     markdown.AppendLine($"- Giá bán: {sell} {currency}");
     markdown.AppendLine($"- Giá gốc: {origin} {currency}");
     markdown.AppendLine($"- Giảm giá: {retail} {currency}");
-    for (int i = 0; i < numImg; i++)
+    markdown.AppendLine($"image: image/{code}/"+Path.GetFileName(filesImg[0]));
+    for (int i = 1; i < numImg; i++)
     {
         var nameFileImg = Path.GetFileName(filesImg[i]);
-        markdown.AppendLine($"image{i+1}: image/{code}/{nameFileImg}");
+        markdown.AppendLine($"image{i}: image/{code}/{nameFileImg}");
     }
     
     markdown.AppendLine();
@@ -344,7 +375,7 @@ foreach (var row in rows)
     markdown.AppendLine(); 
 
     // Save MD file
-    var mdFileName = name+".md";
+    var mdFileName = code+".md";
     var mdFilePath = Path.Combine(savePathExcel, "md-file", mdFileName);
     if (!Directory.Exists(mdFilePath))
     {
