@@ -20,4 +20,11 @@ https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HJBA3E050BK
 https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HJBA3E051BK
 https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HJBA3E075BK
 https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HJBA3EE85N2
-https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HJBA3EE86I2
+
+https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HJHO3E251WT
+https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HJWA3E251WT
+https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HJWA3E812BK
+https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HIWA3E431W2
+https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HIWA3EE30IV
+https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HIWA3EE31W2
+https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HIBA3E130W1

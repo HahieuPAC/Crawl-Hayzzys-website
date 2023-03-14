@@ -6061,24 +6061,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\HIeu\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\Code\\Project\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
+      "projectUniqueName": "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
       "projectName": "CrawlDataWebsiteToolBasic",
-      "projectPath": "F:\\Code\\Project\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "F:\\Code\\Project\\Crawl-Hayzzys-website\\obj\\",
+      "projectPath": "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\CrawlDataWebsiteToolBasic.csproj",
+      "packagesPath": "C:\\Users\\HIeu\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\HIeu\\Documents\\Project\\C#\\Crawl\\Crawl-Hayzzys-website\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\HIeu\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6157,7 +6152,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }

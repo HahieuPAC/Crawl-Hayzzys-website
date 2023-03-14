@@ -343,7 +343,7 @@ foreach (var row in rows)
     }
     var markdown = new StringBuilder();
     var name = rowData[1];
-    var type = rowData[2];
+    var brand = rowData[2];
     var intro = rowData[3];
     var code = rowData[4];
     var material = rowData[5];
@@ -352,27 +352,41 @@ foreach (var row in rows)
     var origin = rowData[8];
     var retail = rowData[9];
     var currency = rowData[10];
+    var season= rowData[11];
+    var type = rowData[12];
+    var gender = rowData[13];
+    var size = rowData[14];
+    var countryOfOrigin = rowData[15];
+
     string [] filesImg = Directory.GetFiles(Path.Combine(savePathExcel, "images", code));
     int numImg= filesImg.Length;
 
+    markdown.AppendLine("---");
+    markdown.AppendLine($"productCode: \"{code}\"");
+    markdown.AppendLine($"name: \"{name}\"");
+    markdown.AppendLine($"brand: \"{brand}\"");
+    markdown.AppendLine($"material: \"{material}\"");
+    markdown.AppendLine($"season: \"{season}\"");
+    markdown.AppendLine($"type: \"{type}\"");
+    markdown.AppendLine($"gender: \"{gender}\"");
+    markdown.AppendLine($"size: \"{size}\"");
+    markdown.AppendLine($"weight: \"{mass}\"");
+    markdown.AppendLine($"sale: \"{sell}\"");
+    markdown.AppendLine($"price: \"{origin}\"");
+    markdown.AppendLine($"ratio: \"{retail}\"");
+    markdown.AppendLine($"countryOfOrigin: \"{countryOfOrigin}\"");
+    markdown.AppendLine($"detail: \"{intro}\"");
 
-    markdown.AppendLine($"# {name} ({type})");
-    markdown.AppendLine($"- Mã sản phẩm: {code}");
-    markdown.AppendLine($"- Chất liệu: {material}");
-    markdown.AppendLine($"- Khối lượng: {mass}");
-    markdown.AppendLine($"- Giá bán: {sell} {currency}");
-    markdown.AppendLine($"- Giá gốc: {origin} {currency}");
-    markdown.AppendLine($"- Giảm giá: {retail} {currency}");
-    markdown.AppendLine($"image: image/{code}/"+Path.GetFileName(filesImg[0]));
+    markdown.AppendLine($"socialImage: image/{code}/"+Path.GetFileName(filesImg[0]));
     for (int i = 1; i < numImg; i++)
     {
         var nameFileImg = Path.GetFileName(filesImg[i]);
         markdown.AppendLine($"image{i}: image/{code}/{nameFileImg}");
     }
     
-    markdown.AppendLine();
-    markdown.AppendLine(intro);
-    markdown.AppendLine(); 
+    markdown.AppendLine("tags:");
+    markdown.AppendLine("  - nextjs");
+    markdown.AppendLine("---"); 
 
     // Save MD file
     var mdFileName = code+".md";
