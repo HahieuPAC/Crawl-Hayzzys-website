@@ -93,7 +93,6 @@ foreach (var typeCode in typeCodes)
 // Loop 2
 foreach (var link in listLinkProduct)
 {
-    Console.WriteLine(link);
 
     // Khởi tạo trình duyệt
     using (var browser = await Puppeteer.LaunchAsync(options))
@@ -206,8 +205,7 @@ foreach (var link in listLinkProduct)
                             introProducts.Add("Lấy dữ liệu lỗi");
                         }
                     }
-                    var introProduct = string.Join("\n", introProducts[0]);
-                    Console.WriteLine(introProduct);
+                    var introProduct = introProducts[0];
 
                      // Mã sản phẩm, trọng lượng, nguyên liệu
                     var nodeInfoes = await element.QuerySelectorAllAsync(".box-line.box-line__tb2 .box-line__list li span");
@@ -367,21 +365,19 @@ foreach (var row in rows)
     markdown.AppendLine($"brand: \"{brand}\"");
     markdown.AppendLine($"material: \"{material}\"");
     markdown.AppendLine($"season: \"{season}\"");
-    markdown.AppendLine($"type: \"{type}\"");
     markdown.AppendLine($"gender: \"{gender}\"");
     markdown.AppendLine($"size: \"{size}\"");
     markdown.AppendLine($"weight: \"{mass}\"");
     markdown.AppendLine($"sale: \"{sell}\"");
     markdown.AppendLine($"price: \"{origin}\"");
     markdown.AppendLine($"ratio: \"{retail}\"");
-    markdown.AppendLine($"countryOfOrigin: \"{countryOfOrigin}\"");
     markdown.AppendLine($"detail: \"{intro}\"");
 
-    markdown.AppendLine($"socialImage: image/{code}/"+Path.GetFileName(filesImg[0]));
+    markdown.AppendLine($"socialImage: images/{code}/"+Path.GetFileName(filesImg[0]));
     for (int i = 1; i < numImg; i++)
     {
         var nameFileImg = Path.GetFileName(filesImg[i]);
-        markdown.AppendLine($"image{i}: image/{code}/{nameFileImg}");
+        markdown.AppendLine($"image{i}: images/{code}/{nameFileImg}");
     }
     
     markdown.AppendLine("tags:");
